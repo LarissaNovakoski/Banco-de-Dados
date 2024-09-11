@@ -1,0 +1,172 @@
+--Uma empresa deseja cadastrar os cartões de seus clientes. As informações necessárias são:
+--N° Cartão (código único), data de validade, código cliente, CPF, número verificador, limite do cartão e nome do cliente.
+--O cliente pode ter vários cartões.
+
+create table Cartoes
+(idCartao number(20),
+ dataValidade date,
+ codVerificador number(3),
+ limite number (12,2),
+ idCliente number(9),
+ idBandeira number(3));
+
+create table Clientes
+(idCliente number(9),
+ Nome varchar2(100),
+ CPF varchar2(15),
+ constraint Clientes_PK
+ Primary Key (idCliente));
+
+create table Bandeira
+(idBandeira number (3),
+ nomeBandeira Varchar2(100)
+ constraint Bandeira_PK
+ Primary Key(idBandeira));
+
+desc Cartoes
+desc Clientes
+desc Bandeira
+
+
+--No supermercado, ao fazer compras, recebemos uma nota com os produtos e o total da compra.
+--Modele o sistema.
+
+create table empresa
+(
+    idEmpresa number(5),
+    razaosocial varchar2(100),
+    CNPJ number(17)
+);
+
+create table NF
+(
+    idNF number(100),
+    numNF number(1000),
+    CPFCliente varchar2 (15),
+    dataCompra date,
+    idpgto number(3)
+);
+
+create table pgto
+(
+    idPgto number(3),
+    descpgto varchar2(70)
+);
+
+create table produto
+(
+    idprod number(5),
+    descprod varchar2 (100),
+    vlrunit number(12,2),
+    codprod number (7)
+);
+
+create table itemNF
+(
+    iditemNF number(9),
+    idNF number(100),
+    idprod number(5),
+    qtd number(5)
+);
+
+
+
+
+create table empresa
+(
+    idEmpresa number(5),
+    razaosocial varchar2(100),
+    CNPJ number(17)
+);
+
+create table NF
+(
+    idNF number(100),
+    numNF number(1000),
+    CPFCliente varchar2 (15),
+    dataCompra date,
+    idpgto number(3)
+);
+
+create table pgto
+(
+    idPgto number(3),
+    descpgto varchar2(70)
+);
+
+create table produto
+(
+    idprod number(5),
+    descprod varchar2 (100),
+    vlrunit number(12,2),
+    codprod number (7)
+);
+
+create table itemNF
+(
+    iditemNF number(9),
+    idNF number(100),
+    idprod number(5),
+    qtd number(5)
+);
+
+create table cidade
+(
+    idcidade number(7),
+    nomecidade varchar2(100),
+    UF Varchar2(2),
+    pais varchar2(100),
+    constraint cidade_pk primary key (idcidade)
+);
+drop table cidade
+    
+create table Pessoa
+(
+    idPessoa number(7),
+    nome varchar2(100),
+    idcidade number(7),
+    endereco varchar2(100),
+    numero number(7),
+    idcidadeentrega number(7),
+    enderecoentrega varchar2(100),
+    numeroentrega number(7),
+ 	constraint Pessoa_pk primary key (idPessoa),
+    constraint Pessoa_cidade_fk foreign key (idcidade) references cidade(idcidade),
+    constraint Pessoa_cidadeentrega_fk foreign key (idcidadeentrega) references cidade(idcidade));
+
+desc Pessoa
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (1, 'São Leopoldo', 'RS', 'Brasil' );
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (2, 'Porto Alegre', 'RS', 'Brasil' );
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (3, 'Campo Bom', 'RS', 'Brasil' );
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (10, 'Florianópolis', 'SC', 'Brasil' );
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (11, 'São Paulo', 'SP', 'Brasil' );
+
+insert into cidade (idcidade, nomecidade, UF, pais)
+values (20, 'New York', null, 'EUA' );
+
+insert into pessoa values (1, 'João', 1, 'Mora em campo bom', 10, null, null, null);
+insert into pessoa values (2, 'Maria', 1, 'Mora em campo bom', 10, 2, 'entrega em NH', 100);
+insert into pessoa values (3, 'Genoveva', 2, 'Mora em NH', 22220, 3, 'entrega em SL', null);
+select*from Pessoa
+
+select Pessoa.*, cidade.nomecidade, cidadeentregaxx.nomecidade
+from Pessoa, cidade, cidade cidadeentregaxx
+where cidade.idcidade = Pessoa.idcidade
+	and cidadeentrega.idcidade = Pessoa.idcidadeentrega
+	and Pessoa.nome = 'Maria'
+
+select pessoa.*, cidade.nomecidade, cidadeentregaxx.nomecidade
+from pessoa, cidade, cidade cidadeentregaxx
+where cidade.idcidade = pessoa.idcidade
+    and cidadeentregaxx.idcidade = pessoa.idcidadeentrega
+    and pessoa.nomepessoa = 'Maria';
