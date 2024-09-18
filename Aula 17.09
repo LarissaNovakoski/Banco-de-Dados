@@ -1,0 +1,101 @@
+-- Uma empresa precisa controlar seus produtos, seu centro de custo e o estoque.
+-- O diagrama possui as tabelas de produtos, centro de custo, estoque e linhas de estoque (Produtos do estoque).
+-- Um centro de custo possui muitos produtos. Um produto possui apenas um centro de custo. A tabela de estoque possui
+-- muitas linhas de estoque. Um produto também possui muitas linhas de estoque, ou seja, a tabela linhas de estoque
+-- recebe duas FKs. A tabela linhas de estoque é filha da tabela de produtos e da tabela estoque. As informações para o centro de custo
+-- são código e descrição. Para o produto são código, descrição, unidade de medida, valor unitário, se o produto está ativo ou inativo e observações.
+-- Para o estoque são o código do estoque e descrição. Para as linhas do estoque são código do estoque, código do produto, quantidade estoque, quantidade mínima do estoque.
+
+create table centro_de_custo
+	(idcentro number(5),
+     Descrição varchar2(100),
+     constraint centro_de_custo_pk
+     Primary key (idcentro));
+
+create table produtos
+	(idprodutos number(7),
+     descrição varchar2(100),
+     un_de_medida number(5,2),
+     valor_unitario number(5,2),
+     ativo_inativo varchar2(1) not null,
+     observações varchar2(100),
+     idcentro number(5),
+     constraint produtos_pk
+     primary key (idprodutos),
+     foreign key (idcentro) references centro_de_custo(idcentro));
+
+
+create table estoque
+	(idestoque number(5),
+     descrição varchar2(100),
+     constraint idestoque_Pk
+     Primary key (idestoque));
+
+create table linhas_de_estoque
+	(idlinhas number(5),
+     idestoque number(5),
+     idproduto number(7),
+     qtd_estoque number(5),
+     qtd_mín_estoque number(4),
+     constraint linhas_de_estoque_pk
+     primary key (idlinhas),
+     foreign key (idestoque) references estoque(idestoque),
+     foreign key (idproduto) references produtos(idprodutos));
+
+desc centro_de_custo
+desc produtos
+desc estoque
+desc linhas_de_estoque
+
+insert into produtos values (1,'Botas',37.50,79.99,'A','Preto',1);
+insert into produtos values (2,'Tênis',42.60,99.90,'A','Branco',1);
+insert into produtos values (3,'Botas Cano longo',37.7,50.00,'I','Azul',2);
+insert into produtos values (4,'Chinelos',35.6,35.00,'A','Rosa',3);
+insert into produtos values (5,'Sapatilhas',35.9,99.99,'A',null,3);
+insert into produtos values (6,'Sandálias',41.6,97.90,'A',null,3);
+insert into produtos values (7,'Saltos',35.30,99.80,'A',null,3);
+insert into produtos values (8,'socorro',35.60,84.76,'A',null,3);
+insert into produtos values (9,'cansei',45.9,64.80,'A',null,1);
+insert into produtos values (10,'aaaaa',47.9,89.9,'A',null,1);
+select*from produtos
+
+insert into centro_de_custo values (1, 'Novo Hamburgo');
+insert into centro_de_custo values (2, 'São Paulo');
+insert into centro_de_custo values (3,'Rio de Janeiro');
+insert into centro_de_custo values (4,'Porto Alegre');
+select*from centro_de_custo
+
+insert into estoque values (1,'Estoque NH');
+insert into estoque values (2,'Estoque São Paulo');
+insert into estoque values (3,'Estoque Rio de Janeiro');
+select*from estoque
+
+insert into linhas_de_estoque values (1,1,1,1000,20);
+insert into linhas_de_estoque values (2,1,2, 935,40);
+insert into linhas_de_estoque values (3,1,3, 398,20);
+insert into linhas_de_estoque values (4,2,1,1200,60);
+insert into linhas_de_estoque values (5,2,2,1400,100);
+insert into linhas_de_estoque values (6,2,3,1600,40);
+insert into linhas_de_estoque values (7,3,1,1000,30);
+select*from linhas_de_estoque
+
+--Insira o centro de custo Rio de Janeiro e outro São Paulo.
+insert into centro_de_custo values (2, 'São Paulo');
+insert into centro_de_custo values (3,'Rio de Janeiro');
+
+-- Altere centro de custo de Rio de Janeiro para Niterói.
+update centro_de_custo set Descrição= 'Niterói' where idcentro=3
+select*from centro_de_custo
+
+-- Delete Centro de custo de Porto Alegre
+delete from centro_de_custo where idcentro=4
+select*from centro_de_custo
+
+--Verifique quais produtos estão com estoque abaixo da quantidade mínima.
+
+--Selecione a descrição do estoque, a descrição do produto e a quantidade da linha de estoque, ou seja, os produtos de cada estoque.
+
+--Altere a questão 5 para mostrar também a descrição do centro de custo.
+
+--Mostre os produtos que tenham a letra 'a' na sua descrição.
+Select*from produtos Where descrição like '%a%';
