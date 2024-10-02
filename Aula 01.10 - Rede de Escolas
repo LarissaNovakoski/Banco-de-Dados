@@ -1,0 +1,97 @@
+create table rede
+(
+    idrede number(7),
+    nomerede varchar2 (100),
+    fantasiarede varchar2 (100),
+    cnpjrede varchar2 (20),
+    constraint rede_pk
+    primary key (idrede)
+);
+
+create table escolas
+(
+    idrede number (7),
+    idescola number(7),
+    cnpjescola varchar2 (20),
+    nomeescola varchar2 (100),
+    fantasiaescola varchar2 (100),
+    idnivel number (7),
+    idcidade number (7),
+    diretor varchar2 (100),
+    constraint escolas_pk
+    primary key (idescola),
+    constraint xx foreign key (idrede) references rede (idrede),
+    constraint aa foreign key (idcidade) references cidade (idcidade),
+    constraint cc foreign key (idnivel) references nivelescola (idnivel)  
+);
+
+
+
+create table cidade
+(
+    idcidade number (7),
+    descricao varchar2 (100),
+    ufcidade varchar2 (3),
+    constraint cidade_pk
+    primary key (idcidade)
+);
+
+create table funcionarios
+(
+    idescola number(7),
+    idfunc number(7),
+    nomefunc varchar2 (100),
+    cpffunc number (20),
+    dataadmissaofunc date,
+    vlrsalario number (10,2),
+    idnivel number(7),
+    docentefunc varchar2 (1),
+    constraint funcionarios_pk  primary key (idfunc),
+    constraint aas foreign key (idescola) references escolas (idescola),
+    constraint xxas foreign key (idnivel) references nivelescola (idnivel)
+);
+
+create table nivelescola
+(
+    idnivel number (7),
+    descricaonivel varchar2 (100),
+    constraint nivelescola_pk
+    primary key (idnivel)
+);
+
+create table cursos
+(
+    idescola number(7),
+    idcurso number (7),
+    nomecurso varchar2 (100),
+    datainicio date,
+    datafinal date,
+    situacao varchar2(1),
+    constraint cursos_pk
+    primary key (idcurso),
+    constraint sx foreign key (idescola) references escolas (idescola)
+);
+--INCLUIR REDE
+insert into rede values (1, 'Liberato','Escola Liberato','11.562.404/0001-98');
+--INCLUIR ESCOLAS
+insert into escolas (idrede,idescola,cnpjescola,nomeescola,fantasiaescola,idnivel,idcidade,diretor)
+			  values (1,1,'08.884.825/0001-29','Liberato 1',"Escola 1", 1, 1,'Raul');
+select*from rede
+select*from nivelescola
+select*from cidade
+--INCLUIR NIVEL DE ENSINO
+insert into nivelescola values (1,'Ensino Fundamental');
+insert into nivelescola values (2,'Ensino Médio');
+insert into nivelescola values (3,'Universidade');
+insert into nivelescola values (4,'Superior');
+insert into nivelescola values (5,'Mestrado');
+insert into nivelescola values (6,'Doutorado');
+-- INCLUIR CIDADE
+insert into cidade values (1,'Novo Hamburgo','RS');
+insert into cidade values (2,'São Leopoldo','RS');
+insert into cidade values (3,'Tubarão','SC');
+insert into cidade values (4,'São Paulo','SP');
+
+-- 1 - Conte quantos funcionários estão cadastrados ma escola de código 1.
+-- 2 - Conte quantos funcionarioshá em cada escola.
+-- 3 - Conte quantos funcionários há em cada escola. Mostre apenas as escolas com mais de 2 funcionarios. (Use o having)
