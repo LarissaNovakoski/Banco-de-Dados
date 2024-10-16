@@ -1,0 +1,100 @@
+create table Entrega
+(
+    identrega number (7),
+    idcliente number(7),
+    nomecliente varchar2 (100),
+    CPFcliente number(20),
+    idcidade number(7),
+    enderecoresidencial varchar2 (100),
+    idcidadeentrega number (7),
+    enderecoentrega varchar2 (100),
+    nomerecebedor varchar2 (100),
+    CPFrecebedor number (20),
+    dataentrega date,
+    primary key (identrega),
+    constraint xx foreign key (idcidade) references Cidade (idcidade),
+    constraint yt foreign key (idcidadeentrega) references Cidade (idcidade)
+);
+
+create table Cidade
+(
+    idcidade number (7),
+    nomecidade varchar2(100),
+    UF varchar2 (3),
+    pais varchar2 (100),
+    primary key (idcidade)
+);
+
+create table Produtos
+(
+    idprodutosentrega number (7),
+    identrega number(7),
+    nomefornecedor varchar2 (100),
+    CNPJfornecedor varchar2(22),
+    descricao varchar2(100),
+    quantidade number (12,2),
+    valorunitario number(12,2),
+    enderecofornecedor varchar2(100),
+    idcidadefornecedor number(7),
+    primary key (idprodutosentrega),
+    constraint ue foreign key (identrega) references Entrega (identrega),
+    constraint sd foreign key (idcidadefornecedor) references Cidade (idcidade)
+);
+
+--identrega,idcliente,nomecliente, CPFcliente, idcidade, enderecoresidencial, idcidadeentrega, enderecoentrega, nomerecebedor, CPFrecebedor, dataentrega
+insert into Entrega values (1, 1, 'Daniel', 03472780002,1,'Poemas, 45',1,'Poemas, 45','Daniel',03472780002,null);
+insert into Entrega values (2, 2, 'Pedro', 03860126016,1,'Pedro Adams Filho, 5757',2,'Pedro Adams Filho, 5757','Pedro',03860126016,null);
+insert into Entrega values (3, 3, 'Bruna', 29586480036,3,'Pedro Adams Filho, 5964',3,'Pedro Adams Filho, 5964','Bruna',29586480036,null);
+select*from Entrega
+delete from Entrega where identrega=3
+-- idprodutosentrega, identrega, nomefornecedor, CNPJfornecedor, descricao,quantidade, valorunitario, enderecofornecedor, idcidadefornecedor
+insert into Produtos values (1, 1, 'Tecno3', 11562404000195, 'Tenis',1,12.2,'Pedro Adams',1);
+insert into Produtos values (2, 2, 'Teclebem', 08884825000128, 'Bola',2,12.40,'Bento Gonçalves',2);
+insert into Produtos values (3, 3, 'Frango Now', 01111268000107, 'Meia',2,12,'Poemas,45',3);
+select*from Produtos
+delete from Produtos where idprodutosentrega=(1,2,3)
+--1) Insira duas cidades na tabela cidade;
+insert into Cidade values (1,'Novo Hamburgo', 'RS', 'Brasil');
+insert into Cidade values (2, 'Campo Bom', 'RS', 'Brasil');
+insert into Cidade values (3, 'Salvador','BA','Brasil');
+
+--2) Altere o nome e cpf do cliente para 'João', 90009999 da entrega de código 1;
+update Entrega set nomecliente='João', CPFcliente=90009999 where identrega=1
+select*from Entrega
+
+--3) Delete os produtos da entrega da entrega de código 2;
+delete*from Produtos where identrega=2
+
+--4) Delete os produtos da entrega desde que a quantidade seja inferior a 2 unidades.
+
+
+--5) Conte quantas entregas estão cadastradas.
+select count(*)from Entrega;
+
+--6) selecione as cidades da Região Sul do Brasil.
+select*from Cidade where UF in ('RS','SC','PR');
+
+--7) Selecione as entregas dos clientes que começam com o nome João.
+select*from Entrega where nomecliente like '%João%';
+
+--8) Mostre as entregas que contém 'Tênis', 'Bola', 'Meia'
+
+
+--9) Mostre as entregas onde a cidade de residência é a mesma da cidade de entrega
+
+
+--10) Faça um select mostrando o IdEntrega, nome do cliente, idcidade, idcidadeentrega.
+
+
+--11) Faça um select mostrando o IdEntrega, nome do cliente, idcidade, nome da cidade residência, idcidadeentrega, nome da cidade de entrega.
+
+--12) Conte quantos clientes cada cidade possui (use o campo entrega.idcidade)
+
+
+--13) Conte quantos clientes cada cidade possui (use o campo entrega.idcidade), mostre apenas as cidades com mais de 3 entregas. Use o comando having.
+
+
+--14) Faça uma cópia da tabela cidade copiando apenas as cidades que não são do Rio Grande do Sul.
+
+
+--15)  Mostre as entregas onde a data da entrega está vazia (nula).
