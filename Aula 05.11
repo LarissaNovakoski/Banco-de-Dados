@@ -108,4 +108,4 @@ insert into Produto values(10,'Tesoura', 'un', 15, 'a', 'Aço', 2);
 select CentroCusto.Descricao, Produto.descricao from CentroCusto,Produto where CentroCusto.idCentro = Produto.idCentro
     
 --Altere a consulta anterior para mostrar os centros de custos que não tem produtos. Use sub consulta.
-select CentroCusto.descricao from CentroCusto where CentroCusto.idCentro not in (select Produto.idCentro from Produto)
+select CentroCusto.descricao from CentroCusto where CentroCusto.idCentro not in (select Produto.idCentro from Produto where Produto.idCentro=CentroCusto.idcentro)
