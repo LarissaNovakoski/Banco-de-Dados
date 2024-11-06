@@ -1,0 +1,111 @@
+create table cidade
+(idcidade number(7), nomecidade varchar2(100), uf varchar2(2), pais varchar2(100),
+    constraint cidade_pk primary key (idcidade));
+select*from cidade
+    
+create table pessoa
+(idpessoa number(7), nomepessoa varchar2(100), idcidade number(7), endereco varchar2(100), numero number(7),
+    idcidadeentrega number(7), enderecoentrega varchar2(100), numeroentrega number(7),
+    constraint pessoa_pk primary key (idpessoa),
+    constraint pessoa_cidade_fk foreign key (idcidade) references cidade(idcidade),
+    constraint pessoa_cidadeentrega_fk foreign key (idcidadeentrega) references cidade(idcidade));
+select*from pessoa
+
+insert into cidade values (1, 'Campo Bom', 'RS', 'Brasil');
+insert into cidade values (2, 'Novo Hamburgo', 'RS', 'Brasil');
+insert into cidade values (3, 'São Leopoldo', 'RS', 'Brasil');
+insert into cidade values (4, 'Tubarão', 'SC', 'Brasil');
+
+insert into pessoa values (1, 'João', 1, 'Mora em campo bom', 10, null, null, null);
+insert into pessoa values (2, 'Maria', 1, 'Mora em campo bom', 10, 2, 'entrega em NH', 100);
+insert into pessoa values (3, 'Genoveva', 2, 'Mora em NH', 22220, 3, 'entrega em SL', null);
+
+select*from pessoa,cidade where cidade.idcidade=pessoa.idcidade
+--outra forma de escrever (mais rápida):
+select*from cidade inner join pessoa on cidade.idcidade = pessoa.idpessoa
+
+--Mostra todos os dados da tabela A, independente de ter ou não dados da tabela B. (select normal, apenas adicionar o "(+)" no final.)
+select*from cidade, pessoa where cidade.idcidade=pessoa.idcidade(+)
+    
+--outra forma de escrever (mais rápida):
+select*from cidade left join pessoa on cidade.idcidade = pessoa.idcidade
+
+--SUB CONSULTA (SUB QUERY)--
+--Consulta simples:
+select pessoa.nomepessoa from pessoa, cidade where pessoa.idcidade=cidade.idcidade and UF in ('RS', 'SC','PR')
+--Sub Consulta (Mais rápido)
+select pessoa.nomepessoa from pessoa where pessoa.idcidade in (select cidade.idcidade from cidade where UF in ('RS', 'SC','PR'));
+--outra forma de escrever sub consulta (Ainda mais rápido):
+select pessoa.nomepessoa from pessoa where pessoa.idcidade = (select cidade.idcidade from cidade where UF in ('RS', 'SC', 'PR') and cidade.idcidade = pessoa.idcidade)
+
+
+create table Produto
+(IdProduto Number(7),
+Descricao Varchar2(100),
+UnidMed Varchar2(4),
+ValorUnit Number(10),
+ProdAtivoInativo Varchar2(1),
+Observ Varchar2(100),  
+idCentro Number(7),
+Constraint PRODUTO_PK
+Primary key(IdProduto),
+Constraint Produto_Centro_FK Foreign key(idCentro) references CentroCusto(idCentro));
+
+create table CentroCusto
+(idCentro Number(7),
+ Descricao Varchar2(100),
+ Constraint CENTROCUSTO_PK
+ Primary key(idCentro));
+
+create table Estoque
+(idEstoque Number(7),
+ Descricao Varchar2(100),
+ Constraint ESTOQUE_PK
+ Primary key(idEstoque));
+
+create table Linhas
+(idLinhas Number(7),
+ idEstoque Number(7),
+ IdProduto Number(7),
+ QtdEstoque Number(7),
+ QtdMinEstoque Number(7),
+ Constraint LINHAS_PK
+ Primary key(idLinhas),
+ Constraint Linhas_Estoque_FK Foreign key(idEstoque) references Estoque(idEstoque),
+ Constraint Linhas_Produto_FK Foreign key(idProduto) references Produto(idProduto));  
+
+select*from Linhas
+
+insert into Estoque values(1,'Estoque NH');
+insert into Estoque values(2,'Estoque SL');
+
+insert into CentroCusto values(1,'Centro 0097');
+insert into CentroCusto values(2,'Centro 0046');
+
+insert into CentroCusto values(3,'Rio de Janeiro');
+insert into CentroCusto values(4,'São Paulo');
+
+insert into Linhas values(1, 1, 5, 78, 10);
+insert into Linhas values(3, 1, 4, 20, 8);
+insert into Linhas values(2, 1, 3, 10, 5);
+insert into Linhas values(4, 2, 2, 100, 10);
+insert into Linhas values(5, 2, 1, 9, 3);
+insert into Linhas values(6, 2, 9, 20, 5);
+insert into Linhas values(7, 2, 8, 15, 7);
+
+insert into Produto values(1,'Máquina de lavar', 'un', 2560, 'a', 'Eletrolux', 1);
+insert into Produto values(2,'mangueira', 'mt', 2, 'i', 'mangueira de aço', 1);
+insert into Produto values(3,'Guarda-Roupas', 'un', 1800, 'a', 'Madeira', 1);
+insert into Produto values(4,'Roda', 'un', 560, 'i', 'Aro 14', 1);
+insert into Produto values(5,'Pneu', 'un', 236, 'i', 'Elite', 2);
+insert into Produto values(6,'Soquete', 'un', 12, 'a', 'Vonder', 2);
+insert into Produto values(7,'Chave seta', 'un', 98, 'a', 'GM', 1);
+insert into Produto values(8,'Chave de boca', 'un', 19, 'i', 'Vonder', 2);
+insert into Produto values(9,'Alicate', 'un', 36, 'a', 'Gedore', 1);
+insert into Produto values(10,'Tesoura', 'un', 15, 'a', 'Aço', 2);
+
+--Selecione a descrição do centro de custo e os produtos do centro de custo.
+select CentroCusto.Descricao, Produto.descricao from CentroCusto,Produto where CentroCusto.idCentro = Produto.idCentro
+    
+--Altere a consulta anterior para mostrar os centros de custos que não tem produtos. Use sub consulta.
+select CentroCusto.descricao from CentroCusto where CentroCusto.idCentro not in (select Produto.idCentro from Produto)
