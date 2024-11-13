@@ -1,0 +1,121 @@
+CREATE TABLE Cidade (
+  Cod_Cidade INTEGER   NOT NULL ,
+  Nome_Cidade VARCHAR(40)   NOT NULL ,
+  UF VARCHAR(2)    ,
+  País VARCHAR(75)   NOT NULL   ,
+PRIMARY KEY(Cod_Cidade));
+
+CREATE TABLE PESSOA (
+  id_PESSOA NUMERIC(10)   NOT NULL ,
+  Cod_Cidade INTEGER   NOT NULL ,
+  CGC_CPF VARCHAR(10)   NOT NULL ,
+  NOME VARCHAR(150)   NOT NULL ,
+  ENDERECO VARCHAR(120)    ,
+  BAIRRO VARCHAR(50)    ,
+  CEP VARCHAR(12)    ,
+  PESSOA_FIS_JUR VARCHAR(1)    ,
+PRIMARY KEY(id_PESSOA)  ,
+  FOREIGN KEY(Cod_Cidade)
+    REFERENCES Cidade(Cod_Cidade));
+
+CREATE TABLE TITULO_CONTAS_RECEBER (
+  ID_TITULO_CRC NUMERIC(7)   NOT NULL ,
+  ID_PESSOA NUMERIC(10)   NOT NULL ,
+  NUM_TIT VARCHAR(20)   NOT NULL ,
+  NUM_SERIE VARCHAR(5)   NOT NULL ,
+  Valor_Tit NUMERIC(12,2)   NOT NULL ,
+  Valor_aberto NUMERIC(12,2)    ,
+  Valor_pago NUMERIC(12,2)    ,
+  Data_Titulo DATE   NOT NULL   ,
+PRIMARY KEY(ID_TITULO_CRC)  ,
+  FOREIGN KEY(ID_PESSOA)
+    REFERENCES PESSOA(id_PESSOA));
+
+CREATE TABLE HISTORICO_CONTAS_RECEBER (
+  ID_TITULO_CRC NUMERIC(7)   NOT NULL ,
+  Sequencia_CRC NUMERIC(3)   NOT NULL ,
+  Data_movimento DATE   NOT NULL ,
+  Data_vencimento DATE   NOT NULL ,
+  Valor_parcela NUMERIC(12,2)   NOT NULL ,
+  Data_pagamento DATE    ,
+  Valor_aberto NUMERIC(12,2)    ,
+  Valor_pago NUMERIC(12,2)    ,
+  Valor_desconto NUMERIC(12,2)    ,
+  Valor_juros NUMERIC(12,2)   NOT NULL   ,
+PRIMARY KEY(ID_TITULO_CRC, Sequencia_CRC)  ,
+  FOREIGN KEY(ID_TITULO_CRC)
+    REFERENCES TITULO_CONTAS_RECEBER(ID_TITULO_CRC));
+
+
+Insert into CIDADE (COD_CIDADE,NOME_CIDADE,UF,PAÍS) values ('1','Campo Bom','RS','Brasil');
+Insert into CIDADE (COD_CIDADE,NOME_CIDADE,UF,PAÍS) values ('2','São Leopoldo','RS','Brasil');
+Insert into CIDADE (COD_CIDADE,NOME_CIDADE,UF,PAÍS) values ('3','São Paulo','SP','Brasil');
+Insert into Cidade values ('4','Novo Hamburgo', 'RS','Brasil');
+
+
+Insert into PESSOA (ID_PESSOA,COD_CIDADE,CGC_CPF,NOME,ENDERECO,BAIRRO,CEP,PESSOA_FIS_JUR) values ('1','1','888888','João Da Silva','Nova Santana',null,'9999999','F');
+Insert into PESSOA (ID_PESSOA,COD_CIDADE,CGC_CPF,NOME,ENDERECO,BAIRRO,CEP,PESSOA_FIS_JUR) values ('2','1','111111','Maria de Lourdes','Nova Brentano',null,'9999999','J');
+Insert into PESSOA (ID_PESSOA,COD_CIDADE,CGC_CPF,NOME,ENDERECO,BAIRRO,CEP,PESSOA_FIS_JUR) values ('3','2','222222','João Augusto da Luz','Maralto',null,'7777777','F');
+Insert into PESSOA (ID_PESSOA,COD_CIDADE,CGC_CPF,NOME,ENDERECO,BAIRRO,CEP,PESSOA_FIS_JUR) values ('4','2','2234567','Aquatema da Silva','Nova Hartz',null,'66666666','F');
+Insert into PESSOA (ID_PESSOA,COD_CIDADE,CGC_CPF,NOME,ENDERECO,BAIRRO,CEP,PESSOA_FIS_JUR) values ('5','3','55555555','São Paulo','São Bernardo',null,'55555555','F');
+
+
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('1','1','100','1','1000','1000','0', to_date('01/01/10','dd/mm/rrrr'));
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('2','1','130','1','1200','0','1200',to_date('01/01/10','dd/mm/rrrr'));
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('3','2','120','1','330','100','230',to_date('01/01/12','dd/mm/rrrr'));
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('4','3','121','1','5000','5000','0',to_date('01/01/13','dd/mm/rrrr'));
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('5','4','122','1','300','300','0',to_date('01/01/13','dd/mm/rrrr'));
+Insert into TITULO_CONTAS_RECEBER (ID_TITULO_CRC,ID_PESSOA,NUM_TIT,NUM_SERIE,VALOR_TIT,VALOR_ABERTO,VALOR_PAGO,DATA_TITULO) values ('6','4','123','1','123','23','100',to_date('01/01/13','dd/mm/rrrr'));
+
+INSERT INTO historico_contas_receber
+(ID_TITULO_CRC, Sequencia_CRC, Data_movimento, Data_vencimento, Valor_parcela, Data_pagamento, Valor_aberto, Valor_pago, Valor_desconto, Valor_juros)
+VALUES (1, 12, to_date('01/01/10','dd/mm/rrrr'), to_date('01/01/10','dd/mm/rrrr'), 500, to_date('01/01/10','dd/mm/rrrr'), 0, 500, 0, 0);
+
+INSERT INTO historico_contas_receber
+(ID_TITULO_CRC, Sequencia_CRC, Data_movimento, Data_vencimento, Valor_parcela, Data_pagamento, Valor_aberto, Valor_pago, Valor_desconto, Valor_juros)
+VALUES (1, 22, to_date('28/06/23','dd/mm/rrrr'), to_date('28/06/23','dd/mm/rrrr'), 300, to_date('28/06/23','dd/mm/rrrr'), 0, 300, 0, 0);
+
+INSERT INTO historico_contas_receber
+(ID_TITULO_CRC, Sequencia_CRC, Data_movimento, Data_vencimento, Valor_parcela, Data_pagamento, Valor_aberto, Valor_pago, Valor_desconto, Valor_juros)
+VALUES (2, 12, to_date('28/09/23','dd/mm/rrrr'), to_date('28/09/23','dd/mm/rrrr'), 200, to_date('28/09/23','dd/mm/rrrr'), 100, 100, 0, 0);
+
+INSERT INTO historico_contas_receber
+(ID_TITULO_CRC, Sequencia_CRC, Data_movimento, Data_vencimento, Valor_parcela, Data_pagamento, Valor_aberto, Valor_pago, Valor_desconto, Valor_juros)
+VALUES (3, 12, to_date('09/10/20','dd/mm/rrrr'), to_date('25/10/2020','dd/mm/rrrr'), 100, to_date('25/10/2020','dd/mm/rrrr'), 0, 100, 0, 0);
+
+INSERT INTO historico_contas_receber
+(ID_TITULO_CRC, Sequencia_CRC, Data_movimento, Data_vencimento, Valor_parcela, Data_pagamento, Valor_aberto, Valor_pago, Valor_desconto, Valor_juros)
+VALUES (4, 12, to_date('10/10/20','dd/mm/rrrr'), to_date('10/10/20','dd/mm/rrrr'), 400, NULL, 400, 0, 0, 0);
+
+-- a) Selecione o nome da cidade e as pessoas que moram nessa cidade (inner join)
+select*from Cidade inner join PESSOA on cidade.Cod_Cidade=PESSOA.Cod_Cidade;
+select cidade.nome_cidade, pessoa.nome from Cidade inner join PESSOA on cidade.Cod_Cidade=PESSOA.Cod_Cidade; -- Assim traz só o nome da cidades e das pessoas.
+
+--b) altere o comando anterior para mostrar todas as cidades e as pessoas, independente de ter pessoas cadastradas. (left join)
+Select*from Cidade left join PESSOA on cidade.Cod_Cidade=PESSOA.Cod_Cidade(+);
+
+--c) selecione as pessoas e seus títulos (inner join)
+select*from PESSOA inner join TITULO_CONTAS_RECEBER on  PESSOA.ID_PESSOA=TITULO_CONTAS_RECEBER.ID_PESSOA
+select PESSOA.nome,TITULO_CONTAS_RECEBER.* from TITULO_CONTAS_RECEBER inner join PESSOA on PESSOA.ID_PESSOA=TITULO_CONTAS_RECEBER.ID_PESSOA; --.* Para trazer toda a segunda tabela. (Traz o nome e todos os dados dos títulos)
+
+--d) selecione todas as pessoas, o número do título. Mostre inclusive às pessoas que não tem título. (left join)
+select PESSOA.nome, TITULO_CONTAS_RECEBER.NUM_TIT from PESSOA left join TITULO_CONTAS_RECEBER on PESSOA.ID_PESSOA = TITULO_CONTAS_RECEBER.ID_PESSOA;
+
+--e) selecione as cidades que não tem títulos cadastrados (use sub consulta)
+select Cidade.Nome_Cidade from cidade where Cidade.Cod_Cidade not in (select PESSOA.Cod_Cidade from PESSOA, TITULO_CONTAS_RECEBER where PESSOA.ID_PESSOA=TITULO_CONTAS_RECEBER.ID_PESSOA); --Traz as cidades que NÃO tem títulos.
+select Cidade.Nome_Cidade from cidade where Cidade.Cod_Cidade in (select PESSOA.Cod_Cidade from PESSOA, TITULO_CONTAS_RECEBER where PESSOA.ID_PESSOA=TITULO_CONTAS_RECEBER.ID_PESSOA); --Traz as cidades que tem títulos.
+
+--f) some o total de títulos por pessoa, Mostre o nome da pessoa (inner join, sum, group by).
+select PESSOA.nome, sum (TITULO_CONTAS_RECEBER.VALOR_TIT) from PESSOA inner join TITULO_CONTAS_RECEBER on PESSOA.ID_PESSOA = TITULO_CONTAS_RECEBER.ID_PESSOA group by PESSOA.nome;
+
+
+--COMMIT: salve as alterações dos comandos insert, update e delete. São operações DML (Data Manipulation Language).
+--ROLBACK: Desfaz as operações DML até o último ponto salvo pelo commit.
+--EXEMPLO:
+Commit; -- Salvou o que foi feito até então, abaixo realizado alterações.
+delete from Pessoa where id_pessoa=1;
+Update Cidade Set UF='RS' where id_cidade=7;
+Commit; --Salvou as alterações
+delete from cidade where i_cidade=9;
+delete from Produto where idcentrocusto in(9,20);
+rollback; --Desfaz até o ÚLTIMO COMMIT.
