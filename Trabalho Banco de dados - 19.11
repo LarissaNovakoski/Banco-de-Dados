@@ -1,0 +1,107 @@
+CREATE TABLE PESSOA
+    (
+    id_pessoa integer,
+    nome varchar2(20),
+    cpf varchar2(14)
+    );
+
+CREATE TABLE CURSO
+    (
+    id_curso integer,
+    nome varchar2(20)
+    );
+
+CREATE TABLE MENSALIDADE
+    (
+    id_curso integer,
+    id_Pessoa integer,
+    valor number(5,2)
+    );
+
+Insert into Pessoa values(1,'Eliézio Mesquita','11109865424');
+    Insert into Pessoa values(2,'Maria Joaquina','93104465334');
+    Insert into Pessoa values(3,'José da Silva','14109835424');
+
+Insert into curso values(1,'Sistemas');
+    Insert into curso values(2,'Administração');
+    Insert into curso values(3,'Filosofia');
+
+Insert into mensalidade values(1,1,345.45);
+    Insert into mensalidade values(2,3,500);
+    Insert into mensalidade values(3,2,831.28);
+
+Alter table Pessoa add constraint ID_PESSOA_PK primary key (ID_PESSOA);
+
+Alter table Curso add constraint ID_CURSO_PK primary key (ID_CURSO);
+
+alter table Mensalidade add constraints ID_PESSOA_FK FOREIGN KEY(Id_Pessoa) references Pessoa(Id_Pessoa);
+    alter table Mensalidade add constraints ID_CURSO_FK FOREIGN KEY(Id_Curso) references Curso(Id_Curso);
+
+Alter table Pessoa add RG varchar2(14);
+select*from Pessoa;
+
+
+--1) Cadastre mais uma pessoa. Selecione todas as pessoas e os cursos em que estão cadastradas.
+insert into Pessoa values (4,'Larissa novakoski','03472780002','3129515866');
+select Pessoa.id_Pessoa, Pessoa.nome, Curso.nome from Pessoa, Curso, mensalidade where Pessoa.id_Pessoa=mensalidade.id_pessoa and curso.id_curso=Mensalidade.id_curso;
+
+--2) Altere a consulta anterior e mostre todas as pessoas e seus cursos, independente da pessoa estar vinculada a algum curso.
+Select Pessoa.id_Pessoa, Pessoa.nome, Curso.nome as nome_curso From Pessoa Left join Mensalidade on Pessoa.id_Pessoa = Mensalidade.id_Pessoa Left join Curso on Mensalidade.id_Curso = Curso.id_Curso;
+
+--3) Insira mais um curso. Mostre os cursos e o valor das suas mensalidades.
+insert into Curso values (4,'Marketing');
+select Curso.nome, mensalidade.valor from Curso, Mensalidade where Curso.id_curso=Mensalidade.id_curso;
+
+--4) Mostre todos os cursos, independente de ter uma mensalidade cadastrada.
+Select Curso.nome, Mensalidade.valor From Curso left join Mensalidade on Curso.id_Curso = Mensalidade.id_curso;
+
+--5) Mostre o nome do curso, o nome da pessoa e o valor da mensalidade.
+select Pessoa.nome, Curso.nome, Mensalidade.valor from Pessoa, Curso, Mensalidade where Pessoa.id_Pessoa=Mensalidade.id_pessoa and Curso.id_curso=Mensalidade.id_curso;
+
+--6) Mostre as pessoas cadastradas nos cursos de Sistemas e Filosofia.
+select Pessoa.nome, Curso.nome as curso from Pessoa inner join Mensalidade on Pessoa.id_pessoa = Mensalidade.id_pessoa inner join Curso on Mensalidade.id_curso = Curso.id_curso where Curso.nome in ('Sistemas', 'Filosofia');
+
+--7) Mostre as pessoas que tenham a letra M no nome.
+Select*from Pessoa where Pessoa.nome like '%M%';
+
+--Usando sub query:
+--1) Mostre os cursos com pessoas matriculadas.
+select Curso.Nome from Curso where Curso.id_curso in (select Pessoa.id_pessoa from PESSOA, Mensalidade where Pessoa.Id_Pessoa=mensalidade.Id_Pessoa);
+
+--2) Mostre os cursos onde não há pessoas cadastradas.
+select Curso.Nome from Curso where Curso.id_curso not in (select Pessoa.id_pessoa from PESSOA, Mensalidade where Pessoa.Id_Pessoa=mensalidade.Id_Pessoa);
+
+--3) Mostre as pessoas que não estão em nenhum curso.
+select Pessoa.Nome from Pessoa where Pessoa.id_pessoa not in (select Mensalidade.id_pessoa from Curso, Mensalidade where Pessoa.Id_Pessoa=mensalidade.Id_Pessoa);
+
+--Usando count ou sum e/ou group by:
+--1) Conte quantas pessoas estão cadastradas.
+select count(*) from Pessoa;
+
+--2) Conte quantas pessoas estão cadastradas por curso.
+select Curso.nome, count(Mensalidade.id_pessoa) as total_pessoas from Curso left join Mensalidade on Curso.id_curso = Mensalidade.id_curso group by Curso.nome;
+
+--3) Some o valor de todas as mensalidades.
+select SUM(Mensalidade.valor) as total_mensalidades from Mensalidade;
+    
+--4) Some o valor de todas as mensalidades por curso.
+select Curso.nome, sum (Mensalidade.valor) from Curso inner join Mensalidade on Curso.id_Curso = Mensalidade.id_curso group by Curso.nome;
+
+--5) Some o valor de todas as mensalidades por pessoa.
+select Pessoa.nome, sum (Mensalidade.valor) from Pessoa inner join Mensalidade on Pessoa.id_PEssoa = Mensalidade.id_pessoa group by Pessoa.nome;
+
+--Comandos DDL:
+--6) Adicione o campo RG , varchar2(20), na tabela pessoa.
+alter table Pessoa modify RG VARCHAR2(20);
+desc pessoa
+
+--7) Retire o campo CPF na tabela pessoa.
+alter table Pessoa drop column CPF;
+
+--8) Na tabela curso adicione o campo data_inicio.
+alter table curso add data_inicio Date;
+desc curso;
+
+--9) Na tabela Mensalidade, adicione um campo percentual_desconto
+alter table mensalidade add percentual_desconto int;
+desc mensalidade;
